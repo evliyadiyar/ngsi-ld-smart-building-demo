@@ -1,0 +1,15 @@
+{
+  "id": "urn:ngsi-ld:Floor:01",
+  "type": "Floor",
+  "level": {
+    "type": "Property",
+    "value": 1
+  },
+  "refBuilding": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:Building:MainHQ"
+  },
+  "@context": [
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+  ]
+}

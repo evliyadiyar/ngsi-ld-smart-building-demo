@@ -1,0 +1,15 @@
+{
+  "id": "urn:ngsi-ld:Building:MainHQ",
+  "type": "Building",
+  "name": {
+    "type": "Property",
+    "value": "Technopark R&D Building"
+  },
+  "address": {
+    "type": "Property",
+    "value": "Paris, France"
+  },
+  "@context": [
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
+  ]
+}

@@ -1,0 +1,18 @@
+# AI Agent Instructions - As requested
+AGENT_INSTRUCTIONS.md
+
+# Python virtual environments
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE configuration
+.vscode/
+.idea/
