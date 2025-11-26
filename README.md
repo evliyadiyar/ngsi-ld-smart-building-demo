@@ -73,7 +73,11 @@ Follow these steps to set up and run the entire simulation.
 Start the Orion-LD Context Broker and MongoDB database.
 
 ```bash
-docker-compose up -d
+# On modern Docker versions (including Docker Desktop for Mac/Windows), use 'docker compose'
+docker compose up -d
+
+# If you are using an older, standalone installation, you might need:
+# docker-compose up -d
 ```
 
 ### 2. Provision the Data Models
