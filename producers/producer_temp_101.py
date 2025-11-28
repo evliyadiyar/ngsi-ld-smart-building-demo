@@ -3,15 +3,15 @@ import json
 import random
 import time
 
-#Room 001
-ENTITY_ID = "urn:ngsi-ld:Room:001"
+# Room 101 (Floor 1)
+ENTITY_ID = "urn:ngsi-ld:Room:101"
 URL = f"http://localhost:1026/ngsi-ld/v1/entities/{ENTITY_ID}/attrs"
 HEADERS = {"Content-Type": "application/ld+json"}
 
-# Cont
+# Context
 NGSI_LD_CONTEXT = ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
 
-print(f"🌡️🌡️🌡️  Thermostat (Pub 1) Started for {ENTITY_ID}...")
+print(f"Thermostat producer started for {ENTITY_ID}")
 
 while True:
     try:
@@ -29,7 +29,7 @@ while True:
         response = requests.patch(URL, headers=HEADERS, data=json.dumps(payload))
         
         if response.status_code == 204:
-            print(f"--> Sent Temp: {new_temp}°C (Success)")
+            print(f"[Room 101] Temperature: {new_temp}°C")
         else:
             print(f"Error: {response.status_code} - {response.text}")
 

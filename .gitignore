@@ -1,5 +1,6 @@
 # AI Agent Instructions - As requested
 AGENT_INSTRUCTIONS.md
+AI_PROJECT_GUIDE.md
 
 # Python virtual environments
 venv/
@@ -16,3 +17,11 @@ Thumbs.db
 # IDE configuration
 .vscode/
 .idea/
+docker-compose.yml
+
+# Runtime files
+logs/
+.pids
+
+# Old/deprecated files
+listener.py

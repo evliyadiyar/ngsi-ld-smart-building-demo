@@ -1,0 +1,10 @@
+{
+  "refFloor": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:Floor:1"
+  },
+  "occupancy": {
+    "type": "Property",
+    "value": 0
+  }
+}

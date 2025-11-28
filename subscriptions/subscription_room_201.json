@@ -1,0 +1,17 @@
+{
+  "type": "Subscription",
+  "entities": [
+    {
+      "id": "urn:ngsi-ld:Room:201",
+      "type": "Room"
+    }
+  ],
+  "watchedAttributes": ["temperature", "occupancy"],
+  "notification": {
+    "endpoint": {
+      "uri": "http://host.docker.internal:3002/listener",
+      "accept": "application/json"
+    }
+  },
+  "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"]
+}

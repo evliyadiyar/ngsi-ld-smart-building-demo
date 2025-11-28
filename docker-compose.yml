@@ -1,9 +1,8 @@
-version: "3.5"
-
 services:
   mongo:
     image: mongo:4.4
     container_name: db-mongo
+    platform: linux/amd64
     ports:
       - "27017:27017"
     volumes:
@@ -12,6 +11,7 @@ services:
   orion-ld:
     image: fiware/orion-ld
     container_name: fiware-orion-ld
+    platform: linux/amd64
     depends_on:
       - mongo
     ports:

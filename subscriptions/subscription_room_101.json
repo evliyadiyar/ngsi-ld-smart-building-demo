@@ -3,14 +3,14 @@
   "type": "Subscription",
   "entities": [
     {
-      "id": "urn:ngsi-ld:Room:001",
+      "id": "urn:ngsi-ld:Room:101",
       "type": "Room"
     }
   ],
   "watchedAttributes": ["temperature", "occupancy"],
   "notification": {
     "endpoint": {
-      "uri": "http://host.docker.internal:3000/listener",
+      "uri": "http://host.docker.internal:3001/listener",
       "accept": "application/json"
     }
   },

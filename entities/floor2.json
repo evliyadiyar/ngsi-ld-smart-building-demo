@@ -1,9 +1,9 @@
 {
-  "id": "urn:ngsi-ld:Floor:01",
+  "id": "urn:ngsi-ld:Floor:2",
   "type": "Floor",
   "level": {
     "type": "Property",
-    "value": 1
+    "value": 2
   },
   "refBuilding": {
     "type": "Relationship",
