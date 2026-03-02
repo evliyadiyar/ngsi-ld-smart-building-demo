@@ -1,0 +1,763 @@
+{
+  "@context": [
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    {
+      "MLModel": "https://smartbuilding.2mw.fi/ontology#MLModel",
+      "MLApplication": "https://smartbuilding.2mw.fi/ontology#MLApplication",
+      "modelType": "https://smartbuilding.2mw.fi/ontology#modelType",
+      "inputs": "https://smartbuilding.2mw.fi/ontology#inputs",
+      "outputs": "https://smartbuilding.2mw.fi/ontology#outputs",
+      "requiredOutputs": "https://smartbuilding.2mw.fi/ontology#requiredOutputs",
+      "dependsOn": "https://smartbuilding.2mw.fi/ontology#dependsOn",
+      "modelPath": "https://smartbuilding.2mw.fi/ontology#modelPath",
+      "scalerPath": "https://smartbuilding.2mw.fi/ontology#scalerPath",
+      "metrics": "https://smartbuilding.2mw.fi/ontology#metrics"
+    }
+  ],
+  "@graph": [
+    {
+      "id": "urn:ngsi-ld:MLModel:OccupancyDetector",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Occupancy Detector"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Predicts occupancy level from motion sensor data [LEVEL 0]"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "Kitchen_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Kitchen:Motion"
+          },
+          {
+            "name": "Lab_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Lab:Motion"
+          },
+          {
+            "name": "Mailroom_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Mailroom:Motion"
+          },
+          {
+            "name": "occ_lag1",
+            "type": "Number",
+            "source": "derived"
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_occupancy",
+            "type": "Number",
+            "description": "Occupancy level (0-1)"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/occupancy_detector.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": 0.809,
+          "mae": 0.026,
+          "trainingSamples": 104
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:TemperaturePredictor",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Temperature Predictor"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Predicts kitchen temperature from device power and environmental factors [LEVEL 0]"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "Kettle_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Kettle"
+          },
+          {
+            "name": "Fridge_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Fridge"
+          },
+          {
+            "name": "CoffeeMachine_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:CoffeeMachine"
+          },
+          {
+            "name": "Microwave_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Microwave"
+          },
+          {
+            "name": "Kitchen_humidity",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Kitchen:Humidity"
+          },
+          {
+            "name": "Kitchen_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Kitchen:Motion"
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_temperature",
+            "type": "Number",
+            "unit": "CEL"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/temperature_predictor.pkl"
+      },
+      "scalerPath": {
+        "type": "Property",
+        "value": "ml_models/temperature_predictor_scaler.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": 0.287,
+          "mae": 0.481,
+          "trainingSamples": 154
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:HumidityPredictor",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Humidity Predictor"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Predicts average humidity from kitchen humidity sensor [LEVEL 0]"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "Kitchen_humidity",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Kitchen:Humidity"
+          },
+          {
+            "name": "Kettle_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Kettle"
+          },
+          {
+            "name": "Microwave_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Microwave"
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_humidity",
+            "type": "Number",
+            "unit": "P1"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/humidity_predictor.pkl"
+      },
+      "scalerPath": {
+        "type": "Property",
+        "value": "ml_models/humidity_predictor_scaler.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": 0.983,
+          "mae": 0.685,
+          "trainingSamples": 156
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:EnergyPredictor",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Energy Predictor"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Predicts total power consumption [LEVEL 1] - depends on OccupancyDetector"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "dependsOn": {
+        "type": "Relationship",
+        "object": [
+          "urn:ngsi-ld:MLModel:OccupancyDetector"
+        ]
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "Kettle_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Kettle"
+          },
+          {
+            "name": "Fridge_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Fridge"
+          },
+          {
+            "name": "Microwave_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Microwave"
+          },
+          {
+            "name": "CoffeeMachine_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:CoffeeMachine"
+          },
+          {
+            "name": "predicted_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:OccupancyDetector",
+            "attribute": "predicted_occupancy",
+            "fromModel": true
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_energy",
+            "type": "Number",
+            "unit": "W"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/energy_predictor.pkl"
+      },
+      "scalerPath": {
+        "type": "Property",
+        "value": "ml_models/energy_predictor_scaler.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": -0.263,
+          "mae": 968.689,
+          "trainingSamples": 97
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:CO2Predictor",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "CO2 Level Predictor"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Predicts CO2 concentration based on occupancy [LEVEL 1] - depends on OccupancyDetector"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "dependsOn": {
+        "type": "Relationship",
+        "object": [
+          "urn:ngsi-ld:MLModel:OccupancyDetector"
+        ]
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "Kitchen_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Kitchen:Motion"
+          },
+          {
+            "name": "Lab_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Lab:Motion"
+          },
+          {
+            "name": "predicted_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:OccupancyDetector",
+            "attribute": "predicted_occupancy",
+            "fromModel": true
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_co2",
+            "type": "Number",
+            "unit": "PPM"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/co2_predictor.pkl"
+      },
+      "scalerPath": {
+        "type": "Property",
+        "value": "ml_models/co2_predictor_scaler.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": 0.73,
+          "mae": 37.869,
+          "trainingSamples": 104
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:LightingController",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Lighting Controller"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Predicts optimal lighting level based on occupancy [LEVEL 1] - depends on OccupancyDetector"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "dependsOn": {
+        "type": "Relationship",
+        "object": [
+          "urn:ngsi-ld:MLModel:OccupancyDetector"
+        ]
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "Kitchen_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:Sensor:Kitchen:Motion"
+          },
+          {
+            "name": "predicted_occupancy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:OccupancyDetector",
+            "attribute": "predicted_occupancy",
+            "fromModel": true
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_lighting",
+            "type": "Number",
+            "unit": "P1",
+            "description": "Lighting level 0-1"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/lighting_controller.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": 0.625,
+          "mae": 0.08,
+          "trainingSamples": 104
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:ComfortIndexPredictor",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Comfort Index Predictor"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Calculates thermal comfort index [LEVEL 2] - depends on TemperaturePredictor, HumidityPredictor"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "dependsOn": {
+        "type": "Relationship",
+        "object": [
+          "urn:ngsi-ld:MLModel:TemperaturePredictor",
+          "urn:ngsi-ld:MLModel:HumidityPredictor"
+        ]
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_temperature",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:TemperaturePredictor",
+            "attribute": "predicted_temperature",
+            "fromModel": true
+          },
+          {
+            "name": "predicted_humidity",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:HumidityPredictor",
+            "attribute": "predicted_humidity",
+            "fromModel": true
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_comfort_index",
+            "type": "Number",
+            "unit": "P1",
+            "description": "Comfort index 0-1"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/comfort_index_predictor.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": 0.841,
+          "mae": 0.028,
+          "trainingSamples": 154
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:AnomalyDetector",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Energy Anomaly Detector"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Detects anomalies in energy consumption [LEVEL 2] - depends on EnergyPredictor"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "dependsOn": {
+        "type": "Relationship",
+        "object": [
+          "urn:ngsi-ld:MLModel:EnergyPredictor"
+        ]
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_energy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:EnergyPredictor",
+            "attribute": "predicted_energy",
+            "fromModel": true
+          },
+          {
+            "name": "Kettle_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Kettle"
+          },
+          {
+            "name": "Fridge_power",
+            "type": "Number",
+            "source": "urn:ngsi-ld:EnergyDevice:Kitchen:Fridge"
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "anomaly_score",
+            "type": "Number",
+            "description": "Anomaly score (0=normal, 1=anomaly)"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/anomaly_detector.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": -0.271,
+          "mae": 0.481,
+          "trainingSamples": 155
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:HVACOptimizer",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "HVAC Optimizer"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Optimizes HVAC settings [LEVEL 3] - depends on ComfortIndexPredictor, EnergyPredictor"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "dependsOn": {
+        "type": "Relationship",
+        "object": [
+          "urn:ngsi-ld:MLModel:ComfortIndexPredictor",
+          "urn:ngsi-ld:MLModel:EnergyPredictor"
+        ]
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_comfort_index",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:ComfortIndexPredictor",
+            "attribute": "predicted_comfort_index",
+            "fromModel": true
+          },
+          {
+            "name": "predicted_energy",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:EnergyPredictor",
+            "attribute": "predicted_energy",
+            "fromModel": true
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "hvac_setpoint",
+            "type": "Number",
+            "unit": "CEL",
+            "description": "Optimal HVAC temperature setpoint"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/hvac_optimizer.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": -0.163,
+          "mae": 0.687,
+          "trainingSamples": 155
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLModel:AirQualityIndex",
+      "type": "MLModel",
+      "name": {
+        "type": "Property",
+        "value": "Air Quality Index"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Calculates overall air quality [LEVEL 3] - depends on CO2Predictor, HumidityPredictor, TemperaturePredictor"
+      },
+      "modelType": {
+        "type": "Property",
+        "value": "RandomForestRegressor"
+      },
+      "dependsOn": {
+        "type": "Relationship",
+        "object": [
+          "urn:ngsi-ld:MLModel:CO2Predictor",
+          "urn:ngsi-ld:MLModel:HumidityPredictor",
+          "urn:ngsi-ld:MLModel:TemperaturePredictor"
+        ]
+      },
+      "inputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "predicted_co2",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:CO2Predictor",
+            "attribute": "predicted_co2",
+            "fromModel": true
+          },
+          {
+            "name": "predicted_humidity",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:HumidityPredictor",
+            "attribute": "predicted_humidity",
+            "fromModel": true
+          },
+          {
+            "name": "predicted_temperature",
+            "type": "Number",
+            "source": "urn:ngsi-ld:MLModel:TemperaturePredictor",
+            "attribute": "predicted_temperature",
+            "fromModel": true
+          }
+        ]
+      },
+      "outputs": {
+        "type": "Property",
+        "value": [
+          {
+            "name": "air_quality_index",
+            "type": "Number",
+            "unit": "P1",
+            "description": "Air quality index 0-1 (1=best)"
+          }
+        ]
+      },
+      "modelPath": {
+        "type": "Property",
+        "value": "ml_models/air_quality_index.pkl"
+      },
+      "metrics": {
+        "type": "Property",
+        "value": {
+          "r2_score": 0.554,
+          "mae": 0.049,
+          "trainingSamples": 97
+        }
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLApplication:AirQualityMonitoring",
+      "type": "MLApplication",
+      "name": {
+        "type": "Property",
+        "value": "Air Quality Monitoring (Deep Recursion Test)"
+      },
+      "description": {
+        "type": "Property",
+        "value": "Requires AirQualityIndex which triggers 6 other models recursively"
+      },
+      "requiredOutputs": {
+        "type": "Property",
+        "value": [
+          "air_quality_index"
+        ]
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLApplication:HVACOptimization",
+      "type": "MLApplication",
+      "name": {
+        "type": "Property",
+        "value": "HVAC Optimization"
+      },
+      "requiredOutputs": {
+        "type": "Property",
+        "value": [
+          "hvac_setpoint"
+        ]
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLApplication:EnergyMonitoring",
+      "type": "MLApplication",
+      "name": {
+        "type": "Property",
+        "value": "Energy Monitoring with Anomaly Detection"
+      },
+      "requiredOutputs": {
+        "type": "Property",
+        "value": [
+          "predicted_energy",
+          "anomaly_score"
+        ]
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:MLApplication:ComfortMonitoring",
+      "type": "MLApplication",
+      "name": {
+        "type": "Property",
+        "value": "Thermal Comfort Monitoring"
+      },
+      "requiredOutputs": {
+        "type": "Property",
+        "value": [
+          "predicted_comfort_index"
+        ]
+      }
+    }
+  ]
+}
